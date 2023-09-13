@@ -2,7 +2,6 @@ import xlwings as xw
 import l5x
 import shutil
 import os
-import time
 
 print('#############################################################################################')
 print('######    This script will update Tag & Description in L5X file based on Excel file    ######')
@@ -18,24 +17,26 @@ print('-> Check for errors and enjoy your time saved!:)')
 
 # Opening EXCEL File once
 print('Opening Excel file...', end=' ')
-exepath = r"C:\Users\ktolloczko\Desktop\PLC_31X_IO_Allocation_by_Rack.xlsx"
-exesheet = 'Rack_10'
+exepath = r"C:\Users\ktolloczko\Desktop\PLC_32X_IO Allocation_by_Rack.xlsx"
+exesheet = 'Rack_5'
 try:
     # Change manually file name / please exclude any spaces!!!
     exelf = xw.Book(exepath).sheets[exesheet]
 except:
     print('Cannot open Excel file!')
+    breakpoint()
 else:
     print('Done.')
 
 # Opening L5X File once
 print('Opening L5X file...', end=' ')
-l5xpath = r"C:\Users\ktolloczko\Desktop\_011_Input_Output_Mapping_Rack10_modified.L5X"
+l5xpath = r"C:\Users\ktolloczko\Desktop\_004_Input_Output_Mapping_Rack05_modified.L5X"
 try:
     # Change manually file name / please exclude any spaces!!!
     xmlf = l5x.Project(l5xpath)
 except:
     print('Cannot open L5X File!')
+    breakpoint()
 else:
     print('Done.')
 
@@ -43,20 +44,26 @@ else:
 cwd = os.getcwd()
 
 # Saving L5X File output file with backup
-print('Saving L5X File output files in "',cwd,'"...', end=' ')
+print('Saving temporary L5X output files in "',cwd,'"...', end=' ')
 try:
     shutil.copyfile(l5xpath, r'_output.L5X')
     shutil.copyfile(r'_output.L5X', r'_output_backup.L5X')
 except:
     print('Cannot save L5X File!')
+    breakpoint()
 else:
     print('Done.')
 
+print('#############################################################################################')
+
 # Input Excel reading ranges
-print('Please enter Start range of Tags in Excel file (e.g. 2, 10):')
+print('Please enter start range of rows for avaiable Tags in Excel file (e.g. 2, 10) - the column names are added automatically:')
 starow = int(input())
-print('Please enter End range of Tags in Excel file (e.g. 2, 10):')
+print('Please enter end range of rows for avaiable Tags Excel file (e.g. 2, 10) - the column names are added automatically:')
 endrow = int(input())
+
+print('#############################################################################################')
+print('#############################################################################################')
 
 # Create Tag list of names in L5X
 L5Xtaglist = xmlf.controller.tags.names
@@ -64,7 +71,10 @@ print('Raw Tag list from L5X:')
 print(L5Xtaglist)
 
 # Remove prefix from Tags list in L5X #TODO: add loop for removing prefixes
-nopreL5Xtaglist20 = [str(s).removeprefix('PSC') for s in L5Xtaglist]
+nopreL5Xtaglist23 = [str(s).removeprefix('CR0') for s in L5Xtaglist]
+nopreL5Xtaglist22 = [str(s).removeprefix('PRC') for s in nopreL5Xtaglist23]
+nopreL5Xtaglist21 = [str(s).removeprefix('PBC') for s in nopreL5Xtaglist22]
+nopreL5Xtaglist20 = [str(s).removeprefix('PSC') for s in nopreL5Xtaglist21]
 nopreL5Xtaglist19 = [str(s).removeprefix('LSO') for s in nopreL5Xtaglist20]
 nopreL5Xtaglist18 = [str(s).removeprefix('PRO') for s in nopreL5Xtaglist19]
 nopreL5Xtaglist17 = [str(s).removeprefix('LVO') for s in nopreL5Xtaglist18]
@@ -87,6 +97,11 @@ nopreL5Xtaglist = [str(s).removeprefix('TSC') for s in nopreL5Xtaglist2]
 print('Tag list without prefix from L5X:')
 print(nopreL5Xtaglist)
 
+print('#############################################################################################')
+print('#############################################################################################')
+print('PHASE 1. Veryfing if Tag Descriptions are matching.')
+print('#############################################################################################')
+
 # Selecting data from range in Excel file /+1 because of range function
 for i in range(starow,endrow+1):
 
@@ -107,7 +122,10 @@ for i in range(starow,endrow+1):
     print('Searching Tags in L5X File...', end=' ')
 
     # Remove prefix from Excel Tag #TODO: add loop for removing prefixes
-    nopreExetag20 = str(Exetag).removeprefix('PSC')
+    nopreExetag23 = str(Exetag).removeprefix('CR0')
+    nopreExetag22 = str(nopreExetag23).removeprefix('PRC')
+    nopreExetag21 = str(nopreExetag22).removeprefix('PBC')
+    nopreExetag20 = str(nopreExetag21).removeprefix('PSC')
     nopreExetag19 = str(nopreExetag20).removeprefix('LSO')
     nopreExetag18 = str(nopreExetag19).removeprefix('PRO')
     nopreExetag17 = str(nopreExetag18).removeprefix('LVO')
@@ -146,7 +164,7 @@ for i in range(starow,endrow+1):
             print('Checking if description is matching...', end=' ')
 
             if L5Xdes != Exedes:
-                print('not matching!')   
+                print('no!')   
 
                 print('Updating Tag Description to:', Exedes, end=' ')
 
@@ -165,7 +183,9 @@ for i in range(starow,endrow+1):
             break
     print('Completed.')
 
-print('Veryfing if Tag Names are matching...')
+print('#############################################################################################')
+print('PHASE 2. Veryfing if Tag Names are matching.')
+print('#############################################################################################')
 
 # Selecting data from range in Excel file /+1 because of range function
 for i in range(starow,endrow+1):
@@ -187,7 +207,10 @@ for i in range(starow,endrow+1):
     print('Searching Tags in L5X File...', end=' ')
    
     # Remove prefix from Excel Tag #TODO: add loop for removing prefixes
-    nopreExetag20 = str(Exetag).removeprefix('PSC')
+    nopreExetag23 = str(Exetag).removeprefix('CR0')
+    nopreExetag22 = str(nopreExetag23).removeprefix('PRC')
+    nopreExetag21 = str(nopreExetag22).removeprefix('PBC')
+    nopreExetag20 = str(nopreExetag21).removeprefix('PSC')
     nopreExetag19 = str(nopreExetag20).removeprefix('LSO')
     nopreExetag18 = str(nopreExetag19).removeprefix('PRO')
     nopreExetag17 = str(nopreExetag18).removeprefix('LVO')
@@ -226,7 +249,7 @@ for i in range(starow,endrow+1):
             print('Checking if tag name is matching...', end=' ')
 
             if L5Xtag != Exetag:
-                print('not matching!')
+                print('no!')
 
                 # ====================================================================================================
                 # Open L5X as txt file *because of bug in l5x library for not being able to write to tag name*
@@ -250,4 +273,19 @@ for i in range(starow,endrow+1):
         except:
             print('Error while searching for Tag in L5X!')
             break
-    print('Completed.')
+
+print('#############################################################################################')
+print('PHASE 3. Saving final L5X output file.')
+print('#############################################################################################')
+
+# Saving L5X output file
+print('Saving final L5X file:"', l5xpath,'"...', end=' ')
+try:
+    shutil.copyfile(r'_output.L5X', l5xpath)
+except:
+    print('Cannot save L5X File!')
+    breakpoint()
+else:
+    print('Done.')
+
+print('Program has been succesfully completed.')
