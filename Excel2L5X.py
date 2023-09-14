@@ -6,7 +6,7 @@ import os
 print('#############################################################################################')
 print('######    This script will update Tag & Description in L5X file based on Excel file    ######')
 print('###### Created by KTolloczko but highly inspired by https://github.com/jvalenzuela/l5x ######')
-print('######        Version 1.0 early beta - 2021-09-15. Please use on your own risk.        ######')
+print('######             Version X.X  - 2021-09-15. Please use on your own risk.             ######')
 print('#############################################################################################')
 print('!!! ATTENTION !!!')
 print('-> Manually modify lines 19-20 and 31 in the script in order to select Excel file, Excel sheet and L5X file.')
